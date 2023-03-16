@@ -10,7 +10,6 @@ import {
 	FunctionContainer,
 } from './HeaderStyle';
 const Header = ({ currentStatus = 'Inventory' }) => {
-
 	const contents = ['Inventory', 'Collections', 'Analytics'];
 
 	return (
