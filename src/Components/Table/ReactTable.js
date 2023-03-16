@@ -36,6 +36,7 @@ function Table({ columns: userColumns, updateMyData, data }) {
 	const {
 		getTableProps,
 		getTableBodyProps,
+		getSubRows,
 		headerGroups,
 		rows,
 		prepareRow,
@@ -98,6 +99,7 @@ function ReactTable() {
 		const newData = refactorData(data);
 		setData(newData);
 	};
+
 	useEffect(() => {
 		if (storedData) {
 			setData(JSON.parse(storedData));
@@ -105,6 +107,7 @@ function ReactTable() {
 			fetchData(transferData);
 		}
 	}, [storedData]);
+
 	const columns = useMemo(
 		() => [
 			{
@@ -169,11 +172,11 @@ function ReactTable() {
 	);
 
 	const updateMyData = (rowIndex, columnId, value) => {
-		// console.log({ rowIndex, columnId, value });
+		console.log({ rowIndex, columnId, value });
 
 		setData((old) =>
 			old.map((row, index) => {
-				console.log({ row, index });
+				// console.log({ row, index });
 				if (index === rowIndex) {
 					return {
 						...old[rowIndex],

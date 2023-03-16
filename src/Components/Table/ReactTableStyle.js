@@ -19,6 +19,8 @@ export const ColourDot = styled.span`
 
 export const Styles = styled.div`
 	padding: 1rem;
+	display: block;
+	max-width: 100%;
 
 	table {
 		border-spacing: 0;
