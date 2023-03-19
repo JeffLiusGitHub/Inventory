@@ -1,95 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useTable, useExpanded } from 'react-table';
 import fetchData from '../../Helper/fetch';
 import { refactorData } from '../../Helper/DataTransfer';
-import { renderTableCell } from './TableCell';
 import { Styles } from './ReactTableStyle';
-
-const EditableCell = ({
-	value: initialValue,
-	row: { index },
-	column: { id },
-	updateMyData,
-}) => {
-	const [value, setValue] = useState(initialValue);
-
-	const onChange = (e) => {
-		setValue(e.target.value);
-	};
-
-	const onBlur = () => {
-		updateMyData(index, id, value);
-	};
-
-	React.useEffect(() => {
-		setValue(initialValue);
-	}, [initialValue]);
-
-	return <input value={value} onChange={onChange} onBlur={onBlur} />;
-};
-
-const defaultColumn = {
-	Cell: EditableCell,
-};
-
-function Table({ columns: userColumns, updateMyData, data }) {
-	const {
-		getTableProps,
-		getTableBodyProps,
-		getSubRows,
-		headerGroups,
-		rows,
-		prepareRow,
-		state: { expanded },
-	} = useTable(
-		{
-			columns: userColumns,
-			data,
-			defaultColumn,
-			updateMyData,
-		},
-		useExpanded
-	);
-
-	return (
-		<>
-			<table {...getTableProps()}>
-				<thead>
-					{headerGroups.map((headerGroup) => (
-						<tr {...headerGroup.getHeaderGroupProps()}>
-							{headerGroup.headers.map((column) => (
-								<th {...column.getHeaderProps()}>{column.render('Header')}</th>
-							))}
-						</tr>
-					))}
-				</thead>
-				<tbody {...getTableBodyProps()}>
-					{rows.map((row, i) => {
-						prepareRow(row);
-						return (
-							<tr {...row.getRowProps()}>
-								{row.cells.map((cell) => {
-									return (
-										<td
-											{...cell.getCellProps()}
-											style={{
-												paddingLeft: `${
-													cell.column.id === 'name' ? row.depth * 4 : 0
-												}rem`,
-											}}
-										>
-											{renderTableCell(cell)}
-										</td>
-									);
-								})}
-							</tr>
-						);
-					})}
-				</tbody>
-			</table>
-		</>
-	);
-}
+import TableElement from './TableElement';
 
 function ReactTable() {
 	const storedData = localStorage.getItem('InventoryData');
@@ -171,39 +84,71 @@ function ReactTable() {
 		[]
 	);
 
-	const updateMyData = (rowIndex, columnId, value) => {
-		console.log({ rowIndex, columnId, value });
-
-		setData((old) =>
-			old.map((row, index) => {
-				// console.log({ row, index });
-				if (index === rowIndex) {
+	const updateMyData = (rowIndex, columnId, value, depth, rowId) => {
+		const [firstIndex, secondIndex, thirdIndex] = rowId.split('.').map(Number);
+		const newData = data.map((row, index) => {
+			if (index === firstIndex) {
+				if (depth === 0) {
 					return {
-						...old[rowIndex],
+						...row,
 						[columnId]: value,
 					};
+				} else if (depth === 1) {
+					const newSubRows = row.subRows.map((subRow, subIndex) => {
+						if (subIndex === secondIndex) {
+							return {
+								...subRow,
+								[columnId]: value,
+							};
+						}
+						return subRow;
+					});
+
+					return {
+						...row,
+						subRows: newSubRows,
+					};
+				} else if (depth === 2) {
+					const newSubRows = row.subRows.map((subRow, subIndex) => {
+						if (subIndex === secondIndex) {
+							const newSubSubRows = subRow.subRows.map(
+								(subSubRow, subSubIndex) => {
+									if (subSubIndex === thirdIndex) {
+										return {
+											...subSubRow,
+											[columnId]: value,
+										};
+									}
+									return subSubRow;
+								}
+							);
+
+							return {
+								...subRow,
+								subRows: newSubSubRows,
+							};
+						}
+						return subRow;
+					});
+
+					return {
+						...row,
+						subRows: newSubRows,
+					};
 				}
-				return row;
-			})
-		);
-		localStorage.setItem(
-			'InventoryData',
-			JSON.stringify(
-				data.map((row, index) => {
-					if (index === rowIndex) {
-						return {
-							...data[rowIndex],
-							[columnId]: value,
-						};
-					}
-					return row;
-				})
-			)
-		);
+			}
+
+			return row;
+		});
+
+		setData(newData);
+
+		localStorage.setItem('InventoryData', JSON.stringify(newData));
 	};
+
 	return (
 		<Styles>
-			<Table columns={columns} data={data} updateMyData={updateMyData} />
+			<TableElement columns={columns} data={data} updateMyData={updateMyData} />
 		</Styles>
 	);
 }
