@@ -1,5 +1,7 @@
 Check out the live demo [here] (https://main.dzx14kjbg48zl.amplifyapp.com/).
 
+A website for e-commerce inventory management can access API data, display sub-data, and enable inline editing. Data is sotred locally, so data will not be lost during a refresh.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
