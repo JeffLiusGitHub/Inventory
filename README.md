@@ -1,3 +1,5 @@
+Check out the live demo [here] (https://main.dzx14kjbg48zl.amplifyapp.com/).
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
