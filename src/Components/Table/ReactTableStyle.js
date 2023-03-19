@@ -1,14 +1,16 @@
 import styled from 'styled-components';
-
+import { tablet } from '../../Components/responsive';
 export const ColourContainer = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	padding: 0 5px;
+	${tablet({ flexDirection: 'column' })}
 `;
 export const ColourDot = styled.span`
 	width: 15px;
 	height: 15px;
+	${tablet({ width: '10px', height: '10px', margin: '5px' })}
 	border-radius: 50%;
 	border: 1px dotted rgba(0, 0, 0, 0.2);
 	background-color: ${(props) => props.color};
@@ -21,6 +23,7 @@ export const Styles = styled.div`
 	padding: 1rem;
 	display: block;
 	max-width: 100%;
+	${tablet({ padding: 0 })}
 
 	table {
 		border-spacing: 0;
@@ -55,6 +58,7 @@ export const Styles = styled.div`
 			input {
 				text-align: center;
 				font-size: 1rem;
+				${tablet({ fontSize: '0.7rem' })}
 				width: 100%;
 				padding: 0;
 				margin: 0;
