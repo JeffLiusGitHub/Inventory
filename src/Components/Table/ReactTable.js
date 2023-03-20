@@ -45,11 +45,11 @@ function ReactTable() {
 			},
 
 			{
-				Header: ' Image',
+				Header: 'Image',
 				accessor: 'image',
 			},
 			{
-				Header: ' Name',
+				Header: 'Name',
 				accessor: 'name',
 			},
 			// {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 const EditableCell = ({
 	value: initialValue,
 	row: { index, depth, id: rowId },
@@ -15,7 +15,7 @@ const EditableCell = ({
 		updateMyData(index, id, value, depth, rowId);
 	};
 
-	React.useEffect(() => {
+	useEffect(() => {
 		setValue(initialValue);
 	}, [initialValue]);
 
