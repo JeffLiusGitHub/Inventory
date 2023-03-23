@@ -5,8 +5,10 @@ import { Styles } from './ReactTableStyle';
 import TableElement from './TableElement';
 
 function ReactTable() {
-	const storedData = localStorage.getItem('InventoryData');
-	const [data, setData] = useState([]);
+	//get localstorage data
+	const storedData = JSON.parse(localStorage.getItem('InventoryData'));
+	//initialize data, if no storedData, add empty array
+	const [data, setData] = useState(storedData || []);
 
 	const transferData = (data) => {
 		const newData = refactorData(data);
@@ -14,13 +16,12 @@ function ReactTable() {
 	};
 
 	useEffect(() => {
-		if (storedData) {
-			setData(JSON.parse(storedData));
-		} else {
+		//if no storedData,fetch and set data
+		if (!storedData) {
 			fetchData(transferData);
 		}
 	}, [storedData]);
-
+	//https://react-table-v7.tanstack.com/docs/quick-start#define-columns define column need to use useMemo, deduct render times, improve performance
 	const columns = useMemo(
 		() => [
 			{
@@ -85,11 +86,14 @@ function ReactTable() {
 	);
 
 	const updateMyData = (rowIndex, columnId, value, depth, rowId) => {
+		//1.2.3 split into 1 2 3 change to number and assign to first second third index
 		const [firstIndex, secondIndex, thirdIndex] = rowId.split('.').map(Number);
 		const newData = data.map((row, index) => {
+
 			if (index === firstIndex) {
 				if (depth === 0) {
 					return {
+						//copy row and update related columnId value
 						...row,
 						[columnId]: value,
 					};

@@ -11,7 +11,12 @@ import {
 } from './HeaderStyle';
 const Header = ({ currentStatus = 'Inventory' }) => {
 	const contents = ['Inventory', 'Collections', 'Analytics'];
-
+	//define contents, which should only display these three. Will better if use typescript
+	if (!contents.includes(currentStatus)) {
+		throw new ReferenceError(
+			'currentStatus must be one of the following words:Inventory, Collections, Analytics'
+		);
+	}
 	return (
 		<HeaderContainer>
 			<TitleContainer>
@@ -20,6 +25,7 @@ const Header = ({ currentStatus = 'Inventory' }) => {
 						<Title
 							key={content}
 							selected={currentStatus === content}
+							//check if currentStatus is current content mark selected to true
 							currentStatus
 							setCurrentStatus
 						>
